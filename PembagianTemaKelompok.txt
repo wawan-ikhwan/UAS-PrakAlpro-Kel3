@@ -1,0 +1,35 @@
+kelompok 1
+buble sort
+jump search
+
+kelompok 2
+selection sort
+binery search
+
+kelompok 3
+Insertion Sort
+linear Search
+
+kelompok 4
+buble sort
+linear search
+
+kelompok 5
+selection sort
+jump search
+
+kelompok 6
+Insertion Sort
+binery search
+
+kelompok 7
+buble sort
+binery search
+
+kelompok 8
+selection sort
+linear search
+
+kelompok 9 
+Insertion Sort
+jump search
