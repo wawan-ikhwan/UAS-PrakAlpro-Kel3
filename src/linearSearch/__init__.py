@@ -2,17 +2,24 @@ from os import path
 from time import time
 import datetime
 
-def LinearSearch(series,temukan : str):
-  DIR=path.dirname(__file__) # Path absolut
-  diIndex=None
+def LinearSearch(series,temukan):
+  temukan=str(temukan)
+  # START OF LOGGING
   startTime=time()
+  DIR=path.dirname(__file__) # Path absolut
+  
+  diIndex=None
+  lenArr=len(series)
   for i,d in enumerate(series):
+    waktuBerlalu=time()-startTime
+    print((' Mencari | '+str(d)+' | '+str(i)+'/'+str(lenArr)+' | '+str(waktuBerlalu)).ljust(10),end='\r')
     if temukan in str(d):
       diIndex=i
       endTime=time()
       break
+  print()
 
-  # LOGGING
+  # END OF LOGGING
   tanggalMulai=datetime.datetime.fromtimestamp(startTime).strftime("%Y-%m-%d %H:%M:%S")
   namaKolom=series.name
   waktuBerlalu=datetime.timedelta(seconds=endTime-startTime)
