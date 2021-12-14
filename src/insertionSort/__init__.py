@@ -2,12 +2,11 @@ from os import path
 from time import time
 import datetime
 
-def InsertionSort(arr,namaKolom : str,urutan : str):
+def InsertionSort(arr,namaKolom : str,urutan:str='naik'):
   # START OF LOGGING
   startTime=time()
   DIR=path.dirname(__file__) # Path absolut
   tanggalMulai=datetime.datetime.fromtimestamp(startTime).strftime("%Y-%m-%d %H:%M:%S")
-
   
   result=arr
   lenArr=len(result)
@@ -22,7 +21,7 @@ def InsertionSort(arr,namaKolom : str,urutan : str):
       pointer-=1
     result[pointer+1]=hold
 
-    print((' Menyortir | '+str(i+1)+'/'+str(lenArr)+' | '+str(waktuBerlalu)).ljust(10),end='\r')
+    print((' Menyortir | '+str(i+1)+'/'+str(lenArr)+' | '+str(waktuBerlalu)).ljust(50),end='\r')
   print()
 
   # END OF LOGGING
@@ -33,4 +32,5 @@ def InsertionSort(arr,namaKolom : str,urutan : str):
   for l in logs: logLine+=str(l)+' '
   with open(DIR+'/../data/output/lastSort.log','a') as f: f.write(logLine+'\n')
   
+  if urutan != 'naik': result=result[::-1]
   return result

@@ -12,7 +12,7 @@ def LinearSearch(series,temukan):
   lenArr=len(series)
   for i,d in enumerate(series):
     waktuBerlalu=time()-startTime
-    print((' Mencari | '+str(d)+' | '+str(i)+'/'+str(lenArr)+' | '+str(waktuBerlalu)).ljust(10),end='\r')
+    print((' Mencari | '+str(d)+' | '+str(i)+'/'+str(lenArr)+' | '+str(waktuBerlalu)).ljust(50),end='\r')
     if temukan in str(d):
       diIndex=i
       endTime=time()
