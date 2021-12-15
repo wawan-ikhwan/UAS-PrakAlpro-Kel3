@@ -10,6 +10,7 @@ def InsertionSort(arr,namaKolom : str,urutan:str='naik'):
   
   result=arr
   lenArr=len(result)
+  maxIndex=lenArr-1
   for i in range(1,lenArr):
     waktuBerlalu=time()-startTime
     hold=result[i]
@@ -21,7 +22,7 @@ def InsertionSort(arr,namaKolom : str,urutan:str='naik'):
       pointer-=1
     result[pointer+1]=hold
 
-    print((' Menyortir | '+str(i+1)+'/'+str(lenArr)+' | '+str(waktuBerlalu)).ljust(50),end='\r')
+    print((' Menyortir | '+str(i)+'/'+str(maxIndex)+' | '+str(waktuBerlalu)).ljust(50),end='\r')
   print()
 
   # END OF LOGGING

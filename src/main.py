@@ -17,6 +17,7 @@ def sortBy(dataframe,kolom,urutan='naik',simpan=False):
   df2 = pd.DataFrame({kolom: sortedList})
   df2['g'] = df2.groupby(kolom).cumcount()
   result=result.set_index([kolom, 'g']).reindex(df2.set_index([kolom,'g']).index).reset_index().drop('g',axis=1).reindex(columns=result.columns.tolist())
+  result=result.drop('g',axis=1)
 
   if simpan:
     result.to_csv(DIR+'/./data/output/sorted/'+kolom+'-'+urutan+'.csv',index=False)
@@ -25,6 +26,8 @@ def sortBy(dataframe,kolom,urutan='naik',simpan=False):
 def searchBy(dataframe,kolom,cari):
   return LinearSearch(dataframe[kolom],cari) # Mengembalikan indeks
 #=========================================
+
+# print(*df.columns)
 
 # sortedDF=sortBy(df,'order_date',urutan='turun',simpan=True)
 # print(sortedDF)
