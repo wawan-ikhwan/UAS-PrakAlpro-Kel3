@@ -1,18 +1,36 @@
-import tkinter as tk
-from tkinter import StringVar, ttk
-from tkinter import filedialog
-import pandas as pd
+from tkinter import Frame,StringVar,ttk,filedialog,Scrollbar,Label,Button,Entry,OptionMenu
+from pandas import DataFrame,read_csv
 from os import path
-from main import sortBy,searchBy
+from linearSearch import LinearSearch
+from insertionSort import InsertionSort
+
 DIR=path.dirname(__file__) # Path absolut
 
-class TableViewer(tk.Frame):
+def sortBy(dataframe,kolom,urutan='naik',simpan=False):
+  result=dataframe.copy()
+  sortedList=InsertionSort(result[kolom].tolist(),kolom,urutan)
+
+  # Reindexing...
+  result['g'] = result.groupby(kolom).cumcount()
+  df2 = DataFrame({kolom: sortedList})
+  df2['g'] = df2.groupby(kolom).cumcount()
+  result=result.set_index([kolom, 'g']).reindex(df2.set_index([kolom,'g']).index).reset_index().drop('g',axis=1).reindex(columns=result.columns.tolist())
+  result=result.drop('g',axis=1)
+
+  if simpan:
+    result.to_csv(DIR+'/./data/output/sorted/'+kolom+'-'+urutan+'.csv',index=False)
+  return result
+
+def searchBy(dataframe,kolom,cari):
+  return LinearSearch(dataframe[kolom],cari) # Mengembalikan indeks
+
+class TableViewer(Frame):
 
   def __init__(self, parent, *args, **kwargs):
-    tk.Frame.__init__(self, parent, *args, **kwargs)
+    Frame.__init__(self, parent, *args, **kwargs)
     self.parent = parent
 
-    self.TableMargin = tk.Frame(self.parent,width=10)
+    self.TableMargin = Frame(self.parent,width=10)
     self.TableMargin.pack()
 
     self.style=ttk.Style(self.TableMargin)
@@ -20,11 +38,11 @@ class TableViewer(tk.Frame):
     self.style.map('Treeview')
 
     self.tree = ttk.Treeview(self.TableMargin, height=10, selectmode='none')
-    self.scrollbarX = tk.Scrollbar(self.TableMargin, orient='horizontal',command=self.tree.xview)
-    self.scrollbarY = tk.Scrollbar(self.TableMargin, orient='vertical',command=self.tree.yview)
+    self.scrollbarX = Scrollbar(self.TableMargin, orient='horizontal',command=self.tree.xview)
+    self.scrollbarY = Scrollbar(self.TableMargin, orient='vertical',command=self.tree.yview)
     self.tree.configure(yscrollcommand=self.scrollbarY.set, xscrollcommand=self.scrollbarX.set)
 
-    self.df=pd.DataFrame(columns=['Kolom 1','Kolom 2','Kolom 3'])
+    self.df=DataFrame(columns=['Kolom 1','Kolom 2','Kolom 3'])
     self.updateTable(self.df)
     
     self.scrollbarX.pack(side='bottom', fill='x')
@@ -54,7 +72,7 @@ class TableViewer(tk.Frame):
     self.IDs=[]
     for i,row in enumerate(self.df.itertuples(index=False)):
       self.IDs.append(self.tree.insert('','end',values=row))
-class MyApp(tk.Frame):
+class MyApp(Frame):
 
   def __browseButton(self,initDir=None):
     if initDir is None: initDir=self.importPath.get()
@@ -64,7 +82,7 @@ class MyApp(tk.Frame):
       print('Dibatalkan')
       return
     self.importPath.set(filename)
-    self.table.updateTable(pd.read_csv(self.importPath.get()))
+    self.table.updateTable(read_csv(self.importPath.get()))
     self.__updateOKolom()
     print('Import Path: ',filename)
   
@@ -73,10 +91,10 @@ class MyApp(tk.Frame):
     print(key,self.importPath.get())
 
   def __init__(self, parent, *args, **kwargs):
-    tk.Frame.__init__(self, parent, *args, **kwargs)
+    Frame.__init__(self, parent, *args, **kwargs)
     self.parent = parent
 
-    self.importPath=tk.StringVar()
+    self.importPath=StringVar()
     self.importPath.set('.')
 
     # Window Setup
@@ -84,41 +102,41 @@ class MyApp(tk.Frame):
     self.parent.geometry('860x480')
 
     # Baris 1
-    frame1=tk.Frame(self)
+    frame1=Frame(self)
     frame1.pack(fill='x')
 
-    LTitle=tk.Label(frame1,text=self.parent.title())
+    LTitle=Label(frame1,text=self.parent.title())
     LTitle.config(font=('Courier',20))
     LTitle.pack()
 
     # Baris 2
-    frame2=tk.Frame(self)
+    frame2=Frame(self)
     frame2.pack(fill='x')
 
-    BImport=tk.Button(frame2,text='Import CSV',command=self.__browseButton)
+    BImport=Button(frame2,text='Import CSV',command=self.__browseButton)
     BImport.config(font=('Courier',10))
     BImport.pack(side='left',padx=5,pady=5)
 
-    EImport = tk.Entry(frame2,width=50,textvariable=self.importPath)
+    EImport = Entry(frame2,width=50,textvariable=self.importPath)
     EImport.bind('<Return>', self.__keyPressed)
     EImport.pack(fill='x',padx=5,expand=True)
 
     # Baris 3
-    frame3=tk.Frame(self)
+    frame3=Frame(self)
     frame3.pack(fill='x')
 
     self.table=TableViewer(frame3)
     self.table.pack(fill='x',expand=False)
 
     # Baris 4
-    frame4=tk.Frame(self)
+    frame4=Frame(self)
     frame4.pack(fill='x')
     self.cari=StringVar()
     self.cari.set('')
 
-    self.frame4_1=tk.Frame(frame4)
+    self.frame4_1=Frame(frame4)
     self.frame4_1.pack(side='left')
-    self.opsiKolom=tk.StringVar(self.frame4_1)
+    self.opsiKolom=StringVar(self.frame4_1)
     self.__updateOKolom()
 
 
@@ -131,11 +149,11 @@ class MyApp(tk.Frame):
         self.table.tree.yview_moveto(atIndex[0]/len(self.table.df.index))
         self.table.tree.selection_set(selections)
       except: pass
-    BCari=tk.Button(frame4,text='Cari',command=cariCallback)
+    BCari=Button(frame4,text='Cari',command=cariCallback)
     BCari.config(font=('Courier',10))
     BCari.pack(side='left')
 
-    ECari = tk.Entry(frame4,textvariable=self.cari)
+    ECari = Entry(frame4,textvariable=self.cari)
     ECari.pack(fill='x',expand=True)
   
   def __updateOKolom(self):
@@ -143,5 +161,5 @@ class MyApp(tk.Frame):
       self.OKolom.destroy()
     except: pass
     self.opsiKolom.set(self.table.df.columns[0])
-    self.OKolom=tk.OptionMenu(self.frame4_1,self.opsiKolom,*self.table.df.columns)
+    self.OKolom=OptionMenu(self.frame4_1,self.opsiKolom,*self.table.df.columns)
     self.OKolom.pack(side='left')
