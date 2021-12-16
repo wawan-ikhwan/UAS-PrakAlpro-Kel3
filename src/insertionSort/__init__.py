@@ -31,7 +31,9 @@ def InsertionSort(arr,namaKolom : str,urutan:str='naik'):
   logs=[tanggalMulai,namaKolom,urutan,waktuBerlalu]
   logLine=''
   for l in logs: logLine+=str(l)+' '
-  with open(DIR+'/../data/output/lastSort.log','a') as f: f.write(logLine+'\n')
+  try:
+    with open(DIR+'/../data/output/lastSort.log','a') as f: f.write(logLine+'\n')
+  except: pass
   
   if urutan != 'naik': result=result[::-1]
   return result
