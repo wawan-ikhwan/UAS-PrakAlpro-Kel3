@@ -8,15 +8,15 @@ def LinearSearch(series,temukan):
   startTime=time()
   DIR=path.dirname(__file__) # Path absolut
   
-  diIndex=None
+  diIndex=[]
   lenArr=len(series)
+  maxIndex=lenArr-1
   for i,d in enumerate(series):
     waktuBerlalu=time()-startTime
-    print((' Mencari | '+str(d)+' | '+str(i)+'/'+str(lenArr)+' | '+str(waktuBerlalu)).ljust(50),end='\r')
+    print((' Mencari | '+str(d)+' | '+str(i)+'/'+str(maxIndex)+' | '+str(waktuBerlalu)).ljust(50),end='\r')
     if temukan in str(d):
-      diIndex=i
-      endTime=time()
-      break
+      diIndex.append(i)
+  endTime=time()
   print()
 
   # END OF LOGGING
