@@ -72,6 +72,7 @@ class TableViewer(Frame):
     self.IDs=[]
     for i,row in enumerate(self.df.itertuples(index=False)):
       self.IDs.append(self.tree.insert('','end',values=row))
+
 class MyApp(Frame):
 
   def __browseButton(self,initDir=None):
