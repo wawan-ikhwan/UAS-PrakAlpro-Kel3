@@ -13,7 +13,7 @@ def LinearSearch(series,temukan):
   maxIndex=lenArr-1
   for i,d in enumerate(series):
     waktuBerlalu=time()-startTime
-    print((' Mencari | '+str(d)+' | '+str(i)+'/'+str(maxIndex)+' | '+str(waktuBerlalu)).ljust(50),end='\r')
+    print((' Mencari '+temukan+' | '+str(i)+'/'+str(maxIndex)+' | '+str(waktuBerlalu)).ljust(55),end='\r')
     if temukan in str(d):
       diIndex.append(i)
   endTime=time()
@@ -26,8 +26,7 @@ def LinearSearch(series,temukan):
   logs=[tanggalMulai,namaKolom,temukan,diIndex,waktuBerlalu]
   logLine=''
   for l in logs: logLine+=str(l)+' '
-  try:
-    with open(DIR+'/../data/output/lastSearch.log','a') as f: f.write(logLine+'\n')
-  except: pass
+  try: open(DIR+'/../data/output/lastSearch.log','a').write(logLine+'\n')
+  except: open('./lastSearch.log','a').write(logLine+'\n')
 
   return diIndex

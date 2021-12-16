@@ -22,7 +22,7 @@ def InsertionSort(arr,namaKolom : str,urutan:str='naik'):
       pointer-=1
     result[pointer+1]=hold
 
-    print((' Menyortir | '+str(i)+'/'+str(maxIndex)+' | '+str(waktuBerlalu)).ljust(50),end='\r')
+    print((' Menyortir '+namaKolom+' | '+str(i)+'/'+str(maxIndex)+' | '+str(waktuBerlalu)).ljust(55),end='\r')
   print()
 
   # END OF LOGGING
@@ -31,9 +31,8 @@ def InsertionSort(arr,namaKolom : str,urutan:str='naik'):
   logs=[tanggalMulai,namaKolom,urutan,waktuBerlalu]
   logLine=''
   for l in logs: logLine+=str(l)+' '
-  try:
-    with open(DIR+'/../data/output/lastSort.log','a') as f: f.write(logLine+'\n')
-  except: pass
+  try: open(DIR+'/../data/output/lastSort.log','a').write(logLine+'\n')
+  except: open('./lastSort.log','a').write(logLine+'\n')
   
   if urutan != 'naik': result=result[::-1]
   return result

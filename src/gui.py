@@ -1,4 +1,4 @@
-from tkinter import Frame,StringVar,ttk,filedialog,Scrollbar,Label,Button,Entry,OptionMenu
+from tkinter import Frame,StringVar,ttk,filedialog,Scrollbar,Label,Button,Entry,OptionMenu,_setit
 from pandas import DataFrame,read_csv
 from os import path
 from linearSearch import LinearSearch
@@ -24,6 +24,10 @@ def sortBy(dataframe,kolom,urutan='naik',simpan=False):
 def searchBy(dataframe,kolom,cari):
   return LinearSearch(dataframe[kolom],cari) # Mengembalikan indeks
 
+# class MyOptionMenu(OptionMenu):
+
+#   def __init__(self,parent,variabel,listOpsi)
+#     super().__init__(parent,variabel,*listOpsi)
 class TableViewer(Frame):
 
   def __init__(self, parent, *args, **kwargs):
@@ -72,6 +76,7 @@ class TableViewer(Frame):
     self.IDs=[]
     for i,row in enumerate(self.df.itertuples(index=False)):
       self.IDs.append(self.tree.insert('','end',values=row))
+
 class MyApp(Frame):
 
   def __browseButton(self,initDir=None):
@@ -137,8 +142,8 @@ class MyApp(Frame):
     self.frame4_1=Frame(frame4)
     self.frame4_1.pack(side='left')
     self.opsiKolom=StringVar(self.frame4_1)
-    self.__updateOKolom()
 
+    self.__updateOKolom()
 
     def cariCallback():
       try:
@@ -146,7 +151,7 @@ class MyApp(Frame):
         selections=[]
         for i in atIndex:
           selections.append(self.table.IDs[i])
-        self.table.tree.yview_moveto(atIndex[0]/len(self.table.df.index))
+        self.table.tree.yview_moveto((atIndex[0]-5)/len(self.table.df.index))
         self.table.tree.selection_set(selections)
       except: pass
     BCari=Button(frame4,text='Cari',command=cariCallback)
@@ -158,8 +163,10 @@ class MyApp(Frame):
   
   def __updateOKolom(self):
     try:
+      self.OKolom.pack_forget()
       self.OKolom.destroy()
+      del self.OKolom
     except: pass
     self.opsiKolom.set(self.table.df.columns[0])
     self.OKolom=OptionMenu(self.frame4_1,self.opsiKolom,*self.table.df.columns)
-    self.OKolom.pack(side='left')
+    self.OKolom.pack()
