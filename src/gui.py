@@ -170,3 +170,4 @@ class MyApp(Frame):
     self.opsiKolom.set(self.table.df.columns[0])
     self.OKolom=OptionMenu(self.frame4_1,self.opsiKolom,*self.table.df.columns)
     self.OKolom.pack()
+
