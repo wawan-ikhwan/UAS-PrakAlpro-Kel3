@@ -7,52 +7,48 @@ from main import sortBy,searchBy
 DIR=path.dirname(__file__) # Path absolut
 
 class TableViewer(tk.Frame):
+
   def __init__(self, parent, *args, **kwargs):
     tk.Frame.__init__(self, parent, *args, **kwargs)
     self.parent = parent
 
-    self.lastXPos=(0.0,1.0)
-
-    self.TableMargin = tk.Frame(self.parent)
+    self.TableMargin = tk.Frame(self.parent,width=10)
     self.TableMargin.pack()
 
     self.style=ttk.Style(self.TableMargin)
     self.style.theme_use('default')
     self.style.map('Treeview')
 
-    self.df=pd.DataFrame(columns=['Kolom 1','Kolom 2','Kolom 3'])
-    self.updateTable(self.df)
-
-
-  def destroyTable(self):
-    try:
-      self.scrollbarX.destroy()
-      self.scrollbarY.destroy()
-      self.tree.destroy()
-    except: pass
-    
-  def updateTable(self,df=None):
-    self.destroyTable()
-    if df is not None:
-      self.df = df
-    self.tree = ttk.Treeview(self.TableMargin, columns=self.df.columns.tolist(), height=10, selectmode='none')
+    self.tree = ttk.Treeview(self.TableMargin, height=10, selectmode='none')
     self.scrollbarX = tk.Scrollbar(self.TableMargin, orient='horizontal',command=self.tree.xview)
     self.scrollbarY = tk.Scrollbar(self.TableMargin, orient='vertical',command=self.tree.yview)
-
     self.tree.configure(yscrollcommand=self.scrollbarY.set, xscrollcommand=self.scrollbarX.set)
-    
-    # Heading
-    for c in self.df.columns.tolist():
-      self.tree.heading(c, text=c, anchor='w',command=lambda col=c: 
-        self.updateTable(sortBy(self.df,col))
-      )
-    self.tree.column('#0', stretch='no', minwidth=0, width=0)
-    for i in range(1,len(self.df.columns)):
-      self.tree.column('#'+str(i), stretch='no', minwidth=0, width=130)
 
+    self.df=pd.DataFrame(columns=['Kolom 1','Kolom 2','Kolom 3'])
+    self.updateTable(self.df)
+    
     self.scrollbarX.pack(side='bottom', fill='x')
     self.scrollbarY.pack(side='right',fill='y')
     self.tree.pack()
+    
+  def updateTable(self,df=None):
+    if df is not None:
+      self.df = df
+    else: pass
+
+    # Remove current data
+    for row in self.tree.get_children():
+      self.tree.delete(row)
+    
+    #reconfigure
+    self.tree.configure(columns=self.df.columns.tolist())
+    
+    # Heading
+    for c in self.df.columns.tolist():
+      self.tree.heading(c, text=c, anchor='w',command=lambda col=c:self.updateTable(sortBy(self.df,col)))
+    self.tree.column('#0', stretch='no', minwidth=0, width=0)
+    for i in range(1,len(self.df.columns)):
+      self.tree.column('#'+str(i), stretch='no', minwidth=0, width=130)
 
     # Fill Data
     self.IDs=[]
@@ -65,7 +61,6 @@ class MyApp(tk.Frame):
     print('Importing csv...')
     filename = filedialog.askopenfilename(filetypes=[('Comma Separated Value','*.csv')],initialdir=initDir)
     if not filename:
-      print(self.table.lastXPos)
       print('Dibatalkan')
       return
     self.importPath.set(filename)
@@ -150,8 +145,3 @@ class MyApp(tk.Frame):
     self.opsiKolom.set(self.table.df.columns[0])
     self.OKolom=tk.OptionMenu(self.frame4_1,self.opsiKolom,*self.table.df.columns)
     self.OKolom.pack(side='left')
-
-if __name__ == "__main__":
-  root = tk.Tk()
-  MyApp(root).pack(expand=True)
-  root.mainloop()

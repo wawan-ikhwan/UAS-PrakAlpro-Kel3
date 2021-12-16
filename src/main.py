@@ -2,11 +2,10 @@ import pandas as pd
 import os
 from linearSearch import LinearSearch
 from insertionSort import InsertionSort
-
+from gui import *
 DIR=os.path.dirname(__file__) # Path absolut
 
 # #============DATAFRAME SETUP==============
-# df = pd.read_csv(DIR+'/./data/input/dataset_superstore_simple.csv') # Read lokasi file csv secara relative
 
 def sortBy(dataframe,kolom,urutan='naik',simpan=False):
   result=dataframe.copy()
@@ -25,11 +24,16 @@ def sortBy(dataframe,kolom,urutan='naik',simpan=False):
 
 def searchBy(dataframe,kolom,cari):
   return LinearSearch(dataframe[kolom],cari) # Mengembalikan indeks
-#=========================================
 
-# print(*df.columns)
-
+#==============MODE CLI===================
+# df = pd.read_csv(DIR+'/./data/input/dataset_superstore_simple.csv') # Read lokasi file csv secara relative
 # sortedDF=sortBy(df,'order_date',urutan='turun',simpan=True)
 # print(sortedDF)
 # atIndex=searchBy(df,'sales',258.576)
 # print(atIndex)
+
+#==============MODE GUI===================
+if __name__ == "__main__":
+  root = tk.Tk()
+  MyApp(root).pack(expand=True)
+  root.mainloop()
