@@ -26,6 +26,8 @@ def LinearSearch(series,temukan):
   logs=[tanggalMulai,namaKolom,temukan,diIndex,waktuBerlalu]
   logLine=''
   for l in logs: logLine+=str(l)+' '
-  with open(DIR+'/../data/output/lastSearch.log','a') as f: f.write(logLine+'\n')
+  try:
+    with open(DIR+'/../data/output/lastSearch.log','a') as f: f.write(logLine+'\n')
+  except: pass
 
   return diIndex

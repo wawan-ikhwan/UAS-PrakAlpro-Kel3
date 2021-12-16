@@ -77,7 +77,7 @@ class MyApp(tk.Frame):
     self.parent = parent
 
     self.importPath=tk.StringVar()
-    self.importPath.set('C:\\UAS-PrakAlpro-Kel3')
+    self.importPath.set('.')
 
     # Window Setup
     self.parent.title('UAS Prak. Alpro II Kelompok 3 ')
